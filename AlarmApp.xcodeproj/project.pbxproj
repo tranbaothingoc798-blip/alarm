@@ -69,6 +69,11 @@
 			fileRef = BE9B25D1D239A29BC27F7A37;
 		};
 
+		13A4FB8C9D0E1F2A3B4C5D6E = {
+			isa = PBXBuildFile;
+			fileRef = 13A4FB8C9D0E1F2A3B4C5D6F;
+		};
+
 		147982BEBBBCF1EA792C8730 = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 992CAB152F2499F9D2412D04;
@@ -371,6 +376,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13A4FB8C9D0E1F2A3B4C5D6E,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -816,11 +822,20 @@
 		B88D7E26791946AEFDCC8BB7 = {
 			isa = PBXGroup;
 			children = (
+				13A4FB8C9D0E1F2A3B4C5D6F,
 				67921BA991E985B2A97454A8,
 				362AB31F4E54B3A04FB7BB47,
 			);
 			name = Products;
 			sourceTree = "<group>";
+		};
+
+		13A4FB8C9D0E1F2A3B4C5D6F = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = XCTest.framework;
+			path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework;
+			sourceTree = DEVELOPER_DIR;
 		};
 
 		BBE9396329AB6F984B090810 = {
