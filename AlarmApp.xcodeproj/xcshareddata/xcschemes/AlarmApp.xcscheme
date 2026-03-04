@@ -20,6 +20,20 @@
                ReferencedContainer = "container:AlarmApp.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "208C54D1C19CFF7994A925A1"
+               BuildableName = "AlarmAppTests.xctest"
+               BlueprintName = "AlarmAppTests"
+               ReferencedContainer = "container:AlarmApp.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
       </BuildActionEntries>
    </BuildAction>
    <TestAction
@@ -39,6 +53,15 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "147982BEBBBCF1EA792C8730"
+            BuildableName = "AlarmApp.app"
+            BlueprintName = "AlarmApp"
+            ReferencedContainer = "container:AlarmApp.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
