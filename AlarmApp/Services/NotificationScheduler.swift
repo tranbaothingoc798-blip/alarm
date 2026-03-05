@@ -77,7 +77,7 @@ final class NotificationScheduler {
         cachedPendingCount = await pendingCount()
     }
 
-    func scheduleTestAlarm(fireAt: Date, context: ModelContext? = nil) async {
+    func scheduleTestAlarm(fireAt: Date, proofType: TestProofType, context: ModelContext? = nil) async {
         await cancelTestAlarm()
         var remaining = max(0, budgeter.maxPending - (await pendingCount()))
         for sec in budgeter.escalations where remaining > 0 {
@@ -87,7 +87,12 @@ final class NotificationScheduler {
             content.body = sec == 0 ? "Test ringing starts now" : "Test escalation \(sec)s"
             content.sound = .default
             let identifier = "\(testPrefix)alarm_\(Int(triggerDate.timeIntervalSince1970))_e\(sec)"
-            content.userInfo = ["isTestAlarm": true, "escalation": sec, "requestId": identifier]
+            content.userInfo = [
+                "isTestAlarm": true,
+                "proofType": proofType.rawValue,
+                "escalation": sec,
+                "requestId": identifier
+            ]
             let comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute, .second], from: triggerDate)
             let request = UNNotificationRequest(identifier: identifier, content: content, trigger: UNCalendarNotificationTrigger(dateMatching: comps, repeats: false))
             try? await center.add(request)
@@ -100,7 +105,8 @@ final class NotificationScheduler {
                         "triggerDate": isoString(triggerDate),
                         "escalationSec": sec,
                         "requestId": identifier,
-                        "type": "test"
+                        "type": "test",
+                        "proofType": proofType.rawValue
                     ],
                     context: context
                 )

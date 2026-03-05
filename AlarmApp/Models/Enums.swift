@@ -51,6 +51,13 @@ enum SnoozeFrictionLevel: String, Codable {
     case holdToConfirm
 }
 
+enum TestProofType: String, Codable, CaseIterable, Identifiable {
+    case quiet = "quiet"
+    case full = "full"
+
+    var id: String { rawValue }
+}
+
 enum AlarmEventType: String, Codable {
     case alarmScheduled = "alarm_scheduled"
     case alarmFired = "alarm_fired"

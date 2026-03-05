@@ -33,6 +33,7 @@ struct DiagnosticsView: View {
                 Section("State") {
                     Text("Permission: \(permission)")
                     Text("Pending: \(pending)")
+                    Text("Proof mode: \(settingsList.first?.preferredProofTypeRaw ?? TestProofType.full.rawValue)")
                     Text("Pending alarm: \(pendingByPrefix[NotificationScheduler.shared.alarmPrefix] ?? 0)")
                     Text("Pending test: \(pendingByPrefix[NotificationScheduler.shared.testPrefix] ?? 0)")
                     Text("Pending snooze: \(pendingByPrefix[NotificationScheduler.shared.snoozePrefix] ?? 0)")

@@ -83,9 +83,9 @@ struct SetupWizardView: View {
 
     private var testAlarmCard: some View {
         checklistCard(
-            title: "Test Alarm",
+            title: "Alarm Check",
             status: appVM.settings?.didCompleteTestAlarm == true ? "Completed" : "Not completed",
-            actionTitle: "Run 2-minute test",
+            actionTitle: "Run 1-minute proof",
             action: { showTestAlarm = true }
         )
     }

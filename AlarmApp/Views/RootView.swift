@@ -19,7 +19,7 @@ struct RootView: View {
             await appVM.bootstrap(context: context)
         }
         .fullScreenCover(item: $appVM.activeTrigger) { trigger in
-            RingingView(alarmID: trigger.id, isTest: trigger.isTest)
+            RingingView(alarmID: trigger.id, isTest: trigger.isTest, testProofType: trigger.proofType)
         }
     }
 }

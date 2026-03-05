@@ -7,6 +7,7 @@ import UIKit
 struct AlarmTrigger: Identifiable {
     let id: UUID
     let isTest: Bool
+    let proofType: TestProofType?
 }
 
 @MainActor
@@ -77,6 +78,11 @@ final class AppViewModel: NSObject, ObservableObject, UNUserNotificationCenterDe
         showSetupWizard = !isSetupReady
     }
 
+    func setPreferredProofType(_ type: TestProofType, context: ModelContext) {
+        settings?.preferredProofType = type
+        try? context.save()
+    }
+
     func updateLastSchedulerRebuild(_ date: Date, context: ModelContext) {
         settings?.lastSchedulerRebuildAt = date
         try? context.save()
@@ -84,11 +90,12 @@ final class AppViewModel: NSObject, ObservableObject, UNUserNotificationCenterDe
 
     func handleNotificationResponse(_ userInfo: [AnyHashable: Any]) {
         if let isTest = userInfo["isTestAlarm"] as? Bool, isTest {
-            activeTrigger = AlarmTrigger(id: UUID(), isTest: true)
+            let proof = (userInfo["proofType"] as? String).flatMap(TestProofType.init(rawValue:)) ?? .full
+            activeTrigger = AlarmTrigger(id: UUID(), isTest: true, proofType: proof)
             return
         }
         guard let idString = userInfo["alarmID"] as? String, let id = UUID(uuidString: idString) else { return }
-        activeTrigger = AlarmTrigger(id: id, isTest: false)
+        activeTrigger = AlarmTrigger(id: id, isTest: false, proofType: nil)
     }
 
     nonisolated func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse) async {

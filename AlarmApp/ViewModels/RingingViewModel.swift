@@ -13,6 +13,7 @@ final class RingingViewModel: ObservableObject {
 
     let missionEngine = MissionEngine()
     private let audio = AudioManager.shared
+    private var currentTestProofType: TestProofType = .full
 
     func begin(alarm: Alarm, context: ModelContext) {
         let run = AlarmRun(alarmID: alarm.id)
@@ -36,18 +37,22 @@ final class RingingViewModel: ObservableObject {
         )
     }
 
-    func beginTestRun(context: ModelContext) {
+    func beginTestRun(proofType: TestProofType, context: ModelContext) {
         let run = AlarmRun(alarmID: nil, isTest: true)
         context.insert(run)
         self.run = run
+        currentTestProofType = proofType
         audio.startLoop(soundName: "alarm")
-        missionEngine.start(plan: .plan(for: .standard))
+        if proofType == .full {
+            missionEngine.start(plan: .plan(for: .standard))
+        }
 
         EventLogger.shared.logJSON(
             .ringingStarted,
             runID: run.id,
             payload: [
                 "isTest": true,
+                "proofType": proofType.rawValue,
                 "alarmLabel": "Test Alarm",
                 "soundName": "alarm",
                 "rampStyle": RampStyle.fast.rawValue,
@@ -55,6 +60,10 @@ final class RingingViewModel: ObservableObject {
             ],
             context: context
         )
+    }
+
+    func confirmQuietProofHeard(context: ModelContext) {
+        finish(reason: .success, emergency: nil, userConfirmedHeard: true, context: context)
     }
 
     func currentSnoozeFriction(alarm: Alarm) -> SnoozeFrictionLevel {
@@ -162,7 +171,7 @@ final class RingingViewModel: ObservableObject {
 
     func stopAudio() { audio.stop() }
 
-    private func finish(reason: AlarmStopReason, emergency: EmergencyReason?, context: ModelContext) {
+    private func finish(reason: AlarmStopReason, emergency: EmergencyReason?, userConfirmedHeard: Bool? = nil, context: ModelContext) {
         audio.stop()
         run?.stopReason = reason
         run?.emergencyReason = emergency
@@ -188,7 +197,9 @@ final class RingingViewModel: ObservableObject {
                 "reason": reason.rawValue,
                 "isTest": run?.isTest ?? false,
                 "snoozeCount": run?.snoozeCount ?? 0,
-                "penaltyPoints": run?.penaltyPoints ?? 0
+                "penaltyPoints": run?.penaltyPoints ?? 0,
+                "proofType": (run?.isTest ?? false) ? currentTestProofType.rawValue : "",
+                "userConfirmedHeard": userConfirmedHeard ?? false
             ],
             context: context
         )

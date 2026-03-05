@@ -4,6 +4,7 @@ import SwiftData
 struct RingingView: View {
     let alarmID: UUID
     let isTest: Bool
+    let testProofType: TestProofType?
 
     @Environment(\.modelContext) private var context
     @Environment(\.dismiss) private var dismiss
@@ -25,13 +26,13 @@ struct RingingView: View {
                     .font(.system(size: 42, weight: .bold, design: .rounded))
                     .foregroundStyle(.white)
 
-                if startedMission, let stage = vm.missionEngine.currentStage {
+                if shouldShowMission, startedMission, let stage = vm.missionEngine.currentStage {
                     Text("Stage \(vm.missionEngine.stageIndex + 1) of \(vm.missionEngine.plan.stages.count) • \(formatted(seconds: vm.missionEngine.stageTimeRemaining))")
                         .font(.subheadline)
                         .foregroundStyle(.white.opacity(0.8))
                 }
 
-                if startedMission {
+                if shouldShowMission, startedMission {
                     MissionStageHostView(engine: vm.missionEngine) {
                         vm.missionCompleted(context: context)
                         if vm.run?.endedAt != nil {
@@ -45,9 +46,16 @@ struct RingingView: View {
                     .background(.ultraThinMaterial)
                     .clipShape(RoundedRectangle(cornerRadius: 18, style: .continuous))
                     .padding(.horizontal)
-                } else {
+                } else if shouldShowMission {
                     Button("Start Mission") {
                         startedMission = true
+                    }
+                    .buttonStyle(.borderedProminent)
+                } else if isTest {
+                    Button("I Heard It") {
+                        vm.confirmQuietProofHeard(context: context)
+                        appVM.markTestCompleted(context: context)
+                        dismiss()
                     }
                     .buttonStyle(.borderedProminent)
                 }
@@ -67,7 +75,7 @@ struct RingingView: View {
         }
         .onAppear {
             if isTest {
-                vm.beginTestRun(context: context)
+                vm.beginTestRun(proofType: testProofType ?? .full, context: context)
             } else if let alarm = currentAlarm {
                 vm.begin(alarm: alarm, context: context)
             }
@@ -131,6 +139,10 @@ struct RingingView: View {
 
     private var currentAlarm: Alarm? {
         alarms.first(where: { $0.id == alarmID })
+    }
+
+    private var shouldShowMission: Bool {
+        !isTest || (testProofType ?? .full) == .full
     }
 
     private func formatted(seconds: Int) -> String {
