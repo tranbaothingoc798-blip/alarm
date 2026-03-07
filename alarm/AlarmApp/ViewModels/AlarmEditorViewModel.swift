@@ -13,7 +13,7 @@ final class AlarmEditorViewModel: ObservableObject {
     var isPM: Bool { Calendar.current.component(.hour, from: date) >= 12 }
 
     func setAMPM(_ pm: Bool) {
-        var comps = Calendar.current.dateComponents([.hour, .minute], from: date)
+        var comps = Calendar.current.dateComponents([.year, .month, .day, .hour, .minute], from: date)
         let h = comps.hour ?? 0
         if pm && h < 12 { comps.hour = h + 12 }
         else if !pm && h >= 12 { comps.hour = h - 12 }

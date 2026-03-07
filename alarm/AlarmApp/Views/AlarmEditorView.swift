@@ -37,8 +37,8 @@ struct AlarmEditorView: View {
                             Image(systemName: "clock")
                             Text("Set Wake Missions")
                         }
-                        .accentButton()
                     }
+                    .accentButton()
                 }
                 .padding()
             }
